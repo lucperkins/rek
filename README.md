@@ -147,7 +147,11 @@ res, err := rek.Post("https://httpbin.org/post", rek.Bearer(token))
 It's important to bear in mind that rek provides *no validation* for the options that you provide on a specific request and doesn't provide any constraints on which options can be used with which request method. Some options may not make sense for some methods, e.g. request JSON on a `HEAD` request, but I leave it up to the end user to supply their own constraints. One exception is that the request body can only be set once. If you attempt to set it more than once you'll get a `ErrRequestBodySetMultipleTimes` error. This, for example, will throw that error:
 
 ```go
-_, err := rek.Post("https://httpbin.org")
+comment := Comment{Body: "This movie sucked"}
+
+_, err := rek.Post("https://httpbin.org/post",
+    rek.Json(comment),
+    rek.FormData(map[string]string{"foo": "bar"}))
 
 fmt.Println(err == rek.ErrRequestBodySetMultipleTimes) // true
 ```
