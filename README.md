@@ -38,13 +38,25 @@ ContentLength() int64
 Status()        string
 ```
 
-## Timeout
+## Options
+
+### Headers
+
+```go
+headers := map[string]string{
+    "My-Custom-Header": "foo,bar,baz",
+}
+
+res, err := rek.Post("https://httpbin.org/post", rek.Headers(headers))
+```
+
+### Timeout
 
 ```go
 res, err := rek.Get("https://httpbin.org/get", rek.Timeout(5 * time.Second))
 ```
 
-## Form data
+### Form data
 
 ```go
 form := map[string]string{
@@ -53,4 +65,55 @@ form := map[string]string{
 }
 
 res, err := rek.Put("https://httpbin.org/put", rek.FormData(form))
+```
+
+### File upload
+
+```go
+fieldName := "file"
+filepath := "docs/README.md"
+params := nil
+
+res, err := rek.Post("https:/httpbin.org/post", rek.File(fieldName, filepath, params))
+```
+
+### Basic auth
+
+```go
+username, password := "user", "pass"
+
+res, _ := rek.Get(fmt.Sprintf("https://httpbin.org/basic-auth/%s/%s", username, password),
+    rek.BasicAuth(username, password))
+
+fmt.Println(res.StatusCode()) // 200
+
+res, _ := rek.Get(fmt.Sprintf("https://httpbin.org/basic-auth/%s/other", username, password),
+    rek.BasicAuth(username, password))
+
+fmt.Println(res.StatusCode()) // 401
+```
+
+### Data
+
+```go
+data := map[string]interface{
+    "age": 38,
+    "name": "Luc",
+}
+
+res, err := rek.Post("https://httpbin.org/post", rek.Data(data))
+```
+
+### User agent
+
+```go
+res, err := rek.Post("https://httpbin.org/post", rek.UserAgent("ThisGuy"))
+```
+
+### Bearer (useful for JSON Web Tokens)
+
+```go
+token := "... token ..."
+
+res, err := rek.Post("https://httpbin.org/post", rek.Bearer(token))
 ```
