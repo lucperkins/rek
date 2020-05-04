@@ -8,24 +8,25 @@ import (
 
 type Person struct {
 	Name string `json:"name"`
-	Age int `json:"age"`
+	Age  int    `json:"age"`
 }
 
 var luc = Person{
 	Name: "Luc",
-	Age: 38,
+	Age:  38,
 }
 
 func main() {
-	res, err := rek.Get("https://httpbin.org/anything",
+	_, err := rek.Get("https://httpbin.org/anything",
 		rek.UserAgent("This-Guy"),
 		rek.Headers(map[string]string{"Foo": "bar"}),
-		rek.Data(map[string]interface{}{"foo": 1}),
+		//rek.Data(map[string]interface{}{"foo": 1}),
 		rek.Struct(luc),
+		rek.Callback(func(res *rek.Response) {
+			fmt.Printf("Status code: %d", res.StatusCode())
+		}),
 	)
 	exitOnErr(err)
-
-	fmt.Println(res.Text())
 }
 
 func exitOnErr(err error) {

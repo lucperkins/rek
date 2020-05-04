@@ -1,6 +1,10 @@
 package rek
 
 import (
+	"bytes"
+	"encoding/gob"
+	"encoding/json"
+	"io"
 	"net/http"
 	"time"
 )
@@ -14,6 +18,15 @@ type options struct {
 	userAgent string
 	jsonObj   interface{}
 	callback  func(*Response)
+	cookies   []*http.Cookie
+}
+
+func (o *options) validate() error {
+	if o.jsonObj != nil && o.data != nil {
+		return ErrMultipleBodies
+	}
+
+	return nil
 }
 
 type Option func(*options)
@@ -61,6 +74,12 @@ func Callback(cb func(*Response)) Option {
 	}
 }
 
+func Cookies(cookies []*http.Cookie) Option {
+	return func(opts *options) {
+		opts.cookies = cookies
+	}
+}
+
 func buildOptions(opts ...Option) (*options, error) {
 	os := &options{
 		headers: nil,
@@ -71,8 +90,8 @@ func buildOptions(opts ...Option) (*options, error) {
 		opt(os)
 	}
 
-	if os.jsonObj != nil && os.data != nil {
-		return nil, ErrMultipleBodies
+	if err := os.validate(); err != nil {
+		return nil, err
 	}
 
 	return os, nil
@@ -106,4 +125,33 @@ func setBasicAuth(req *http.Request, opts *options) *http.Request {
 	}
 
 	return req
+}
+
+func setCookies(req *http.Request, opts *options) *http.Request {
+	if opts.cookies != nil {
+		for _, c := range opts.cookies {
+			req.AddCookie(c)
+		}
+	}
+
+	return req
+}
+
+func getData(opts *options) (io.Reader, error) {
+	var buf bytes.Buffer
+
+	if err := gob.NewEncoder(&buf).Encode(opts.data); err != nil {
+		return nil, err
+	}
+
+	return &buf, nil
+}
+
+func getJson(opts *options) (io.Reader, error) {
+	js, err := json.Marshal(opts.jsonObj)
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes.NewBuffer(js), nil
 }

@@ -1,9 +1,6 @@
 package rek
 
 import (
-	"bytes"
-	"encoding/gob"
-	"encoding/json"
 	"io"
 	"net/http"
 )
@@ -12,22 +9,21 @@ func makeRequest(method, url string, opts *options) (*http.Request, error) {
 	var body io.Reader
 
 	if opts.data != nil {
-		var buf bytes.Buffer
-
-		if err := gob.NewEncoder(&buf).Encode(opts.data); err != nil {
-			return nil, err
-		}
-
-		body = &buf
-	}
-
-	if opts.jsonObj != nil {
-		js, err := json.Marshal(opts.jsonObj)
+		data, err := getData(opts)
 		if err != nil {
 			return nil, err
 		}
 
-		body = bytes.NewBuffer(js)
+		body = data
+	}
+
+	if opts.jsonObj != nil {
+		js, err := getJson(opts)
+		if err != nil {
+			return nil, err
+		}
+
+		body = js
 	}
 
 	req, err := http.NewRequest(method, url, body)
@@ -38,6 +34,8 @@ func makeRequest(method, url string, opts *options) (*http.Request, error) {
 	setHeaders(req, opts)
 
 	setBasicAuth(req, opts)
+
+	setCookies(req, opts)
 
 	return req, nil
 }
