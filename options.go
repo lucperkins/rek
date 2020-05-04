@@ -21,6 +21,7 @@ type options struct {
 	cookies   []*http.Cookie
 	file      *file
 	formData  map[string]string
+	cookieJar *http.CookieJar
 }
 
 func (o *options) validate() error {
@@ -79,6 +80,12 @@ func Callback(cb func(*Response)) Option {
 func Cookies(cookies []*http.Cookie) Option {
 	return func(opts *options) {
 		opts.cookies = cookies
+	}
+}
+
+func CookieJar(jar http.CookieJar) Option {
+	return func(opts *options) {
+		opts.cookieJar = &jar
 	}
 }
 

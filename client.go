@@ -2,11 +2,15 @@ package rek
 
 import "net/http"
 
-func makeClient(options *options) *http.Client {
+func makeClient(opts *options) *http.Client {
 	c := &http.Client{}
 
-	if options.timeout != 0 {
-		c.Timeout = options.timeout
+	if opts.cookieJar != nil {
+		c.Jar = *opts.cookieJar
+	}
+
+	if opts.timeout != 0 {
+		c.Timeout = opts.timeout
 	}
 
 	return c
