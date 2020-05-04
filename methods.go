@@ -2,17 +2,17 @@ package rek
 
 import "net/http"
 
-func Get(url string, opts ...Option) (*http.Response, error) {
+func Get(url string, opts ...Option) (*Response, error) {
 	options := buildOptions(opts...)
 
 	cl := makeClient(options)
 
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req, err := makeRequest(http.MethodGet, url, options)
+
+	res, err := cl.Do(req)
 	if err != nil {
 		return nil, err
 	}
 
-	setHeaders(req, options)
-
-	return cl.Do(req)
+	return makeResponse(res)
 }
