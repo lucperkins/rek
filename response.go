@@ -7,14 +7,17 @@ import (
 
 type Response struct {
 	statusCode int
-	body       []byte
+	content    []byte
 	headers    map[string]string
 	encoding   []string
+	cookies    []*http.Cookie
+	res        *http.Response
 }
 
 func makeResponse(res *http.Response) (*Response, error) {
 	resp := &Response{
 		statusCode: res.StatusCode,
+		res:        res,
 	}
 
 	if res.Header != nil {
@@ -35,11 +38,15 @@ func makeResponse(res *http.Response) (*Response, error) {
 			return nil, err
 		}
 
-		resp.body = bs
+		resp.content = bs
 	}
 
 	if res.TransferEncoding != nil {
 		resp.encoding = res.TransferEncoding
+	}
+
+	if res.Cookies() != nil {
+		resp.cookies = res.Cookies()
 	}
 
 	return resp, nil
@@ -49,8 +56,8 @@ func (r *Response) StatusCode() int {
 	return r.statusCode
 }
 
-func (r *Response) Body() []byte {
-	return r.body
+func (r *Response) Content() []byte {
+	return r.content
 }
 
 func (r *Response) Headers() map[string]string {
@@ -62,5 +69,13 @@ func (r *Response) Encoding() []string {
 }
 
 func (r *Response) Text() string {
-	return string(r.body)
+	return string(r.content)
+}
+
+func (r *Response) Raw() *http.Response {
+	return r.res
+}
+
+func (r *Response) Cookies() []*http.Cookie {
+	return r.cookies
 }

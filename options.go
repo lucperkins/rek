@@ -6,37 +6,44 @@ import (
 )
 
 type Options struct {
-	Headers  map[string]string
-	Timeout  time.Duration
-	Username string
-	Password string
+	headers  map[string]string
+	timeout  time.Duration
+	username string
+	password string
+	data     map[string]interface{}
 }
 
 type Option func(*Options)
 
 func WithHeaders(headers map[string]string) Option {
 	return func(opts *Options) {
-		opts.Headers = headers
+		opts.headers = headers
 	}
 }
 
 func WithTimeout(timeout time.Duration) Option {
 	return func(opts *Options) {
-		opts.Timeout = timeout
+		opts.timeout = timeout
 	}
 }
 
 func WithBasicAuth(username, password string) Option {
 	return func(opts *Options) {
-		opts.Username = username
-		opts.Password = password
+		opts.username = username
+		opts.password = password
+	}
+}
+
+func WithData(data map[string]interface{}) Option {
+	return func(opts *Options) {
+		opts.data = data
 	}
 }
 
 func buildOptions(opts ...Option) *Options {
 	os := &Options{
-		Headers: nil,
-		Timeout: 10 * time.Second,
+		headers: nil,
+		timeout: 10 * time.Second,
 	}
 
 	for _, opt := range opts {
@@ -47,10 +54,18 @@ func buildOptions(opts ...Option) *Options {
 }
 
 func setHeaders(req *http.Request, opts *Options) *http.Request {
-	if opts.Headers != nil {
-		for k, v := range opts.Headers {
+	if opts.headers != nil {
+		for k, v := range opts.headers {
 			req.Header.Set(k, v)
 		}
+	}
+
+	return req
+}
+
+func setBasicAuth(req *http.Request, opts *Options) *http.Request {
+	if opts.username != "" && opts.password != "" {
+		req.SetBasicAuth(opts.username, opts.password)
 	}
 
 	return req

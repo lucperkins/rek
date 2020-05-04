@@ -22,5 +22,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(res.Encoding())
+	loc, _ := res.Raw().Location()
+
+	fmt.Println(loc)
 }
