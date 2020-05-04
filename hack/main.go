@@ -17,12 +17,6 @@ var luc = Person{
 }
 
 func main() {
-	form := map[string]string{
-		"foo": "bar",
-	}
-
-	fmt.Println(form)
-
 	res, err := rek.Get("https://httpbin.org/anything",
 		//rek.UserAgent("This-Guy"),
 		//rek.Headers(map[string]string{"Foo": "bar"}),
@@ -31,15 +25,12 @@ func main() {
 		//rek.BasicAuth("haxor", "opensesame"),
 		//rek.Headers(map[string]string{"Location": "https://google.com"}),
 		//rek.Struct(luc),
-		rek.JWT("here-is-my-token"),
+		rek.Bearer("here-is-my-token"),
+		rek.DisallowRedirects(),
 	)
 	exitOnErr(err)
 
 	fmt.Println(res.Text())
-	fmt.Println(res.Status())
-
-	loc, _ := res.Raw().Location()
-	fmt.Println(loc)
 }
 
 func exitOnErr(err error) {

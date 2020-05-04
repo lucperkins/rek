@@ -23,7 +23,16 @@ func Patch(url string, opts ...Option) (*Response, error) {
 }
 
 func Head(url string, opts ...Option) (*Response, error) {
-	return call(http.MethodHead, url, opts...)
+	options, err := buildOptions(opts...)
+
+	cl := makeClient(options)
+
+	res, err := cl.Head(url)
+	if err != nil {
+		return nil, err
+	}
+
+	return makeResponse(res)
 }
 
 func call(method, url string, opts ...Option) (*Response, error) {

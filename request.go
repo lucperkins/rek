@@ -63,8 +63,8 @@ func makeRequest(method, endpoint string, opts *options) (*http.Request, error) 
 		req.Header.Set("Content-Type", contentType)
 	}
 
-	if opts.jwt != "" {
-		bearer := fmt.Sprintf("Bearer %s", opts.jwt)
+	if opts.bearer != "" {
+		bearer := fmt.Sprintf("Bearer %s", opts.bearer)
 		req.Header.Set("Authorization", bearer)
 	}
 

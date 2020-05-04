@@ -22,7 +22,7 @@ type options struct {
 	file              *file
 	formData          map[string]string
 	cookieJar         *http.CookieJar
-	jwt               string
+	bearer            string
 	disallowRedirects bool
 }
 
@@ -107,9 +107,9 @@ func FormData(form map[string]string) Option {
 	}
 }
 
-func JWT(token string) Option {
+func Bearer(bearer string) Option {
 	return func(opts *options) {
-		opts.jwt = token
+		opts.bearer = bearer
 	}
 }
 
