@@ -11,11 +11,9 @@ type Comment struct {
 }
 
 func main() {
-	comment := Comment{Body: "this is a cool Gist!"}
+	data := Comment{Body: "foo"}
 
-	res, err := rek.Post("https://httpbin.org/post",
-		rek.Json(comment),
-		rek.Headers(map[string]string{"Custom-Header": "foo,bar,baz"}))
+	res, err := rek.Post("https://httpbin.org/post", rek.Data(data))
 	exitOnErr(err)
 
 	fmt.Println(res.StatusCode())

@@ -50,7 +50,25 @@ headers := map[string]string{
 res, err := rek.Post("https://httpbin.org/post", rek.Headers(headers))
 ```
 
-### Timeout
+### JSON
+
+Pass in any struct:
+
+```go
+type Comment struct {
+    ID        int64     `json:"id"`
+    Body      string    `json:"body"`
+    Timestamp time.Time `json:"timestamp"`
+}
+
+comment := Comment{ID:47, Body:"Cool movie!", Timestamp: time.Now()}
+
+res, err := rek.Post("https://httpbin.org/post", rek.Json(comment))
+```
+
+> Request headers are automatically updated to include `Content-Type` as `application/json;charset=utf-8`.
+
+### Request timeout
 
 ```go
 res, err := rek.Get("https://httpbin.org/get", rek.Timeout(5 * time.Second))
@@ -77,6 +95,8 @@ params := nil
 res, err := rek.Post("https:/httpbin.org/post", rek.File(fieldName, filepath, params))
 ```
 
+> Request headers are automatically updated to include `Content-Type` as `multipart/form-data; boundary=...`.
+
 ### Basic auth
 
 ```go
@@ -95,6 +115,8 @@ fmt.Println(res.StatusCode()) // 401
 
 ### Data
 
+Takes any input and serializes it to a `[]byte`:
+
 ```go
 data := map[string]interface{
     "age": 38,
@@ -103,6 +125,8 @@ data := map[string]interface{
 
 res, err := rek.Post("https://httpbin.org/post", rek.Data(data))
 ```
+
+> Request headers are automatically updated to include `Content-Type` as `application/octet-stream`.
 
 ### User agent
 

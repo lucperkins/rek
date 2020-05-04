@@ -14,7 +14,7 @@ type options struct {
 	timeout           time.Duration
 	username          string
 	password          string
-	data              map[string]interface{}
+	data              interface{}
 	userAgent         string
 	jsonObj           interface{}
 	callback          func(*Response)
@@ -55,7 +55,7 @@ func BasicAuth(username, password string) Option {
 	}
 }
 
-func Data(data map[string]interface{}) Option {
+func Data(data interface{}) Option {
 	return func(opts *options) {
 		opts.data = data
 	}
