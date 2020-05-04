@@ -79,3 +79,11 @@ func (r *Response) Raw() *http.Response {
 func (r *Response) Cookies() []*http.Cookie {
 	return r.cookies
 }
+
+func (r *Response) ContentLength() int64 {
+	return r.res.ContentLength
+}
+
+func (r *Response) Status() string {
+	return r.res.Status
+}

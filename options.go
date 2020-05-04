@@ -10,18 +10,20 @@ import (
 )
 
 type options struct {
-	headers   map[string]string
-	timeout   time.Duration
-	username  string
-	password  string
-	data      map[string]interface{}
-	userAgent string
-	jsonObj   interface{}
-	callback  func(*Response)
-	cookies   []*http.Cookie
-	file      *file
-	formData  map[string]string
-	cookieJar *http.CookieJar
+	headers           map[string]string
+	timeout           time.Duration
+	username          string
+	password          string
+	data              map[string]interface{}
+	userAgent         string
+	jsonObj           interface{}
+	callback          func(*Response)
+	cookies           []*http.Cookie
+	file              *file
+	formData          map[string]string
+	cookieJar         *http.CookieJar
+	jwt               string
+	disallowRedirects bool
 }
 
 func (o *options) validate() error {
@@ -93,8 +95,8 @@ func File(fieldName, filepath string, params map[string]string) Option {
 	return func(opts *options) {
 		opts.file = &file{
 			FieldName: fieldName,
-			Filepath: filepath,
-			Params: params,
+			Filepath:  filepath,
+			Params:    params,
 		}
 	}
 }
@@ -102,6 +104,18 @@ func File(fieldName, filepath string, params map[string]string) Option {
 func FormData(form map[string]string) Option {
 	return func(opts *options) {
 		opts.formData = form
+	}
+}
+
+func JWT(token string) Option {
+	return func(opts *options) {
+		opts.jwt = token
+	}
+}
+
+func DisallowRedirects() Option {
+	return func(opts *options) {
+		opts.disallowRedirects = true
 	}
 }
 

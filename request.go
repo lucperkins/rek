@@ -1,6 +1,7 @@
 package rek
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -60,6 +61,11 @@ func makeRequest(method, endpoint string, opts *options) (*http.Request, error) 
 
 	if opts.file != nil {
 		req.Header.Set("Content-Type", contentType)
+	}
+
+	if opts.jwt != "" {
+		bearer := fmt.Sprintf("Bearer %s", opts.jwt)
+		req.Header.Set("Authorization", bearer)
 	}
 
 	setHeaders(req, opts)
