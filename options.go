@@ -19,6 +19,8 @@ type options struct {
 	jsonObj   interface{}
 	callback  func(*Response)
 	cookies   []*http.Cookie
+	file      *file
+	formData  map[string]string
 }
 
 func (o *options) validate() error {
@@ -80,6 +82,22 @@ func Cookies(cookies []*http.Cookie) Option {
 	}
 }
 
+func File(fieldName, filepath string, params map[string]string) Option {
+	return func(opts *options) {
+		opts.file = &file{
+			FieldName: fieldName,
+			Filepath: filepath,
+			Params: params,
+		}
+	}
+}
+
+func FormData(form map[string]string) Option {
+	return func(opts *options) {
+		opts.formData = form
+	}
+}
+
 func buildOptions(opts ...Option) (*options, error) {
 	os := &options{
 		headers: nil,
@@ -119,22 +137,18 @@ func setHeaders(req *http.Request, opts *options) *http.Request {
 	return req
 }
 
-func setBasicAuth(req *http.Request, opts *options) *http.Request {
+func setBasicAuth(req *http.Request, opts *options) {
 	if opts.username != "" && opts.password != "" {
 		req.SetBasicAuth(opts.username, opts.password)
 	}
-
-	return req
 }
 
-func setCookies(req *http.Request, opts *options) *http.Request {
+func setCookies(req *http.Request, opts *options) {
 	if opts.cookies != nil {
 		for _, c := range opts.cookies {
 			req.AddCookie(c)
 		}
 	}
-
-	return req
 }
 
 func getData(opts *options) (io.Reader, error) {

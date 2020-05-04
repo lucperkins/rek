@@ -17,16 +17,20 @@ var luc = Person{
 }
 
 func main() {
-	_, err := rek.Get("https://httpbin.org/anything",
+	form := map[string]string{
+		"foo": "bar",
+	}
+
+	res, err := rek.Get("https://httpbin.org/anything",
 		rek.UserAgent("This-Guy"),
 		rek.Headers(map[string]string{"Foo": "bar"}),
-		//rek.Data(map[string]interface{}{"foo": 1}),
-		rek.Struct(luc),
-		rek.Callback(func(res *rek.Response) {
-			fmt.Printf("Status code: %d", res.StatusCode())
-		}),
+		//rek.File("file", "go.mod", params),
+		rek.FormData(form),
+		//rek.Struct(luc),
 	)
 	exitOnErr(err)
+
+	fmt.Println(res.Text())
 }
 
 func exitOnErr(err error) {
