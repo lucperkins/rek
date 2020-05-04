@@ -13,11 +13,8 @@ type Comment struct {
 func main() {
 	data := Comment{Body: "foo"}
 
-	res, err := rek.Post("https://httpbin.org/post", rek.Data(data))
-	exitOnErr(err)
-
-	fmt.Println(res.StatusCode())
-	fmt.Println(res.Text())
+	_, err := rek.Post("https://httpbin.org/post", rek.Data(data), rek.Json(data))
+	fmt.Println(err == rek.ErrRequestBodySetMultipleTimes)
 }
 
 func exitOnErr(err error) {

@@ -27,8 +27,22 @@ type options struct {
 }
 
 func (o *options) validate() error {
-	if o.jsonObj != nil && o.data != nil {
-		return ErrMultipleBodies
+	i := 0
+
+	if o.jsonObj != nil {
+		i++
+	}
+
+	if o.data != nil {
+		i++
+	}
+
+	if o.formData != nil {
+		i++
+	}
+
+	if i > 1 {
+		return ErrRequestBodySetMultipleTimes
 	}
 
 	return nil

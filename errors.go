@@ -2,4 +2,4 @@ package rek
 
 import "errors"
 
-var ErrMultipleBodies = errors.New("JSON data and data set")
+var ErrRequestBodySetMultipleTimes = errors.New("you have set the request body more than once")

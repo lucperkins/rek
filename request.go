@@ -41,13 +41,13 @@ func makeRequest(method, endpoint string, opts *options) (*http.Request, error) 
 	}
 
 	if opts.formData != nil {
-		vals := url.Values{}
+		form := url.Values{}
 
 		for k, v := range opts.formData {
-			vals.Set(k, v)
+			form.Set(k, v)
 		}
 
-		body = strings.NewReader(vals.Encode())
+		body = strings.NewReader(form.Encode())
 	}
 
 	req, err := http.NewRequest(method, endpoint, body)
