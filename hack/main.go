@@ -6,30 +6,19 @@ import (
 	"os"
 )
 
-type Person struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
-}
-
-var luc = Person{
-	Name: "Luc",
-	Age:  38,
+type Comment struct {
+	Body string `json:"body"`
 }
 
 func main() {
-	res, err := rek.Get("https://httpbin.org/anything",
-		//rek.UserAgent("This-Guy"),
-		//rek.Headers(map[string]string{"Foo": "bar"}),
-		//rek.File("file", "go.mod", form),
-		//rek.FormData(form),
-		//rek.BasicAuth("haxor", "opensesame"),
-		//rek.Headers(map[string]string{"Location": "https://google.com"}),
-		//rek.Struct(luc),
-		rek.Bearer("here-is-my-token"),
-		rek.DisallowRedirects(),
-	)
+	comment := Comment{Body: "this is a cool Gist!"}
+
+	res, err := rek.Post("https://httpbin.org/post",
+		rek.Json(comment),
+		rek.Headers(map[string]string{"Custom-Header": "foo,bar,baz"}))
 	exitOnErr(err)
 
+	fmt.Println(res.StatusCode())
 	fmt.Println(res.Text())
 }
 

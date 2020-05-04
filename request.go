@@ -55,20 +55,16 @@ func makeRequest(method, endpoint string, opts *options) (*http.Request, error) 
 		return nil, err
 	}
 
-	if opts.formData != nil {
-		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	}
+	setHeaders(req, opts)
 
 	if opts.file != nil {
 		req.Header.Set("Content-Type", contentType)
 	}
 
 	if opts.bearer != "" {
-		bearer := fmt.Sprintf("Bearer %s", opts.bearer)
-		req.Header.Set("Authorization", bearer)
+		bearerHeader := fmt.Sprintf("Bearer %s", opts.bearer)
+		req.Header.Set("Authorization", bearerHeader)
 	}
-
-	setHeaders(req, opts)
 
 	setBasicAuth(req, opts)
 

@@ -67,7 +67,7 @@ func UserAgent(agent string) Option {
 	}
 }
 
-func Struct(v interface{}) Option {
+func Json(v interface{}) Option {
 	return func(opts *options) {
 		opts.jsonObj = v
 	}
@@ -153,6 +153,14 @@ func setHeaders(req *http.Request, opts *options) *http.Request {
 
 	if opts.data != nil {
 		req.Header.Set("Content-Type", "application/octet-stream")
+	}
+
+	if opts.jsonObj != nil {
+		req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	}
+
+	if opts.formData != nil {
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	}
 
 	return req
