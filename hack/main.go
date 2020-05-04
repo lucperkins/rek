@@ -3,26 +3,34 @@ package main
 import (
 	"fmt"
 	"github.com/lucperkins/rek"
-	"log"
-	"time"
+	"os"
 )
 
+type Person struct {
+	Name string `json:"name"`
+	Age int `json:"age"`
+}
+
+var luc = Person{
+	Name: "Luc",
+	Age: 38,
+}
+
 func main() {
-	headers := map[string]string{
-		"Foo": "bar",
-	}
-
-	res, err := rek.Get(
-		"https://api.github.com",
-		rek.WithHeaders(headers),
-		rek.WithTimeout(5*time.Second),
+	res, err := rek.Get("https://httpbin.org/anything",
+		rek.UserAgent("This-Guy"),
+		rek.Headers(map[string]string{"Foo": "bar"}),
+		rek.Data(map[string]interface{}{"foo": 1}),
+		rek.Struct(luc),
 	)
+	exitOnErr(err)
 
+	fmt.Println(res.Text())
+}
+
+func exitOnErr(err error) {
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
-
-	loc, _ := res.Raw().Location()
-
-	fmt.Println(loc)
 }

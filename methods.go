@@ -27,7 +27,10 @@ func Head(url string, opts ...Option) (*Response, error) {
 }
 
 func call(method, url string, opts ...Option) (*Response, error) {
-	options := buildOptions(opts...)
+	options, err := buildOptions(opts...)
+	if err != nil {
+		return nil, err
+	}
 
 	cl := makeClient(options)
 
@@ -38,5 +41,14 @@ func call(method, url string, opts ...Option) (*Response, error) {
 		return nil, err
 	}
 
-	return makeResponse(res)
+	resp, err := makeResponse(res)
+	if err != nil {
+		return nil, err
+	}
+
+	if options.callback != nil {
+		options.callback(resp)
+	}
+
+	return resp, nil
 }

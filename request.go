@@ -2,21 +2,32 @@ package rek
 
 import (
 	"bytes"
+	"encoding/gob"
 	"encoding/json"
 	"io"
 	"net/http"
 )
 
-func makeRequest(method, url string, opts *Options) (*http.Request, error) {
+func makeRequest(method, url string, opts *options) (*http.Request, error) {
 	var body io.Reader
 
 	if opts.data != nil {
-		js, err := json.Marshal(opts.data)
+		var buf bytes.Buffer
+
+		if err := gob.NewEncoder(&buf).Encode(opts.data); err != nil {
+			return nil, err
+		}
+
+		body = &buf
+	}
+
+	if opts.jsonObj != nil {
+		js, err := json.Marshal(opts.jsonObj)
 		if err != nil {
 			return nil, err
 		}
 
-		body = bytes.NewReader(js)
+		body = bytes.NewBuffer(js)
 	}
 
 	req, err := http.NewRequest(method, url, body)

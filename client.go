@@ -2,7 +2,7 @@ package rek
 
 import "net/http"
 
-func makeClient(options *Options) *http.Client {
+func makeClient(options *options) *http.Client {
 	c := &http.Client{}
 
 	if options.timeout != 0 {
