@@ -11,6 +11,8 @@ import (
 func makeRequest(method, endpoint string, opts *options) (*http.Request, error) {
 	var body io.Reader
 	var contentType string
+	var req *http.Request
+	var err error
 
 	if opts.data != nil {
 		data, err := getData(opts)
@@ -50,9 +52,16 @@ func makeRequest(method, endpoint string, opts *options) (*http.Request, error) 
 		body = strings.NewReader(form.Encode())
 	}
 
-	req, err := http.NewRequest(method, endpoint, body)
-	if err != nil {
-		return nil, err
+	if opts.ctx != nil {
+		req, err = http.NewRequestWithContext(opts.ctx, method, endpoint, body)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		req, err = http.NewRequest(method, endpoint, body)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	setHeaders(req, opts)

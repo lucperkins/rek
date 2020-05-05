@@ -2,6 +2,7 @@ package rek
 
 import (
 	"bytes"
+	"context"
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
@@ -28,6 +29,7 @@ type options struct {
 	accept            string
 	reqModifier       func(*http.Request)
 	apiKey            string
+	ctx               context.Context
 }
 
 func (o *options) validate() error {
@@ -171,6 +173,13 @@ func RequestModifier(modifier func(*http.Request)) option {
 func ApiKey(key string) option {
 	return func(opts *options) {
 		opts.apiKey = key
+	}
+}
+
+// Pass a context into the HTTP request (allows for request cancellation, for example).
+func Context(ctx context.Context) option {
+	return func(opts *options) {
+		opts.ctx = ctx
 	}
 }
 
