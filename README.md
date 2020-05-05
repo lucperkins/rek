@@ -1,5 +1,7 @@
 # rek
 
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/lucperkins/rek)
+
 An easy HTTP client for [Go](https://golang.org), inspired by [Requests](https://requests.readthedocs.io/en/master/). Here's an example:
 
 ```go
@@ -40,7 +42,7 @@ Status()        string
 
 ## Options
 
-### Headers
+### Headersshie
 
 ```go
 headers := map[string]string{
