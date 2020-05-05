@@ -145,6 +145,49 @@ token := "... token ..."
 res, err := rek.Post("https://httpbin.org/post", rek.Bearer(token))
 ```
 
+### Request modifier
+
+Supply a function that modified the request (after all other request modifications have been made):
+
+```go
+modifier := func(r *http.Request) {
+   // Do whatever you want with the request
+}
+
+res, err := rek.Get("https://httpbin.org/get", rek.RequestModifier(modifier))
+```
+
+### Accept
+
+Apply an `Accept` header to the request:
+
+```go
+res, err := rek.Get("https://httpbin.org/get", rek.Accept("application/tar+gzip"))
+```
+
+### API key
+
+Add an API key to the request as an `Authorization` header (where the value is `Basic ${KEY}`):
+
+```go
+res, err := rek.Get("https://some-secure-api.io", rek.ApiKey("a1b2c3..."))
+```
+
+### Context
+
+Supply a [`Context`](https://pkg.go.dev/context?tab=doc#Context) to the request:
+
+```go
+ctx, cancel := context.WithCancel(context.Background())
+
+res, err := rek.Get("https://long-winded-api.io", rek.Context(ctx))
+
+// Ugh, I don't want this request to happen anymore
+
+cancel()
+```
+
+
 ## Validation
 
 It's important to bear in mind that rek provides *no validation* for the options that you provide on a specific request and doesn't provide any constraints on which options can be used with which request method. Some options may not make sense for some methods, e.g. request JSON on a `HEAD` request, but I leave it up to the end user to supply their own constraints. One exception is that the request body can only be set once. If you attempt to set it more than once you'll get a `ErrRequestBodySetMultipleTimes` error. This, for example, will throw that error:
