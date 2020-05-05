@@ -24,6 +24,7 @@ type options struct {
 	cookieJar         *http.CookieJar
 	bearer            string
 	disallowRedirects bool
+	accept            string
 }
 
 func (o *options) validate() error {
@@ -148,6 +149,13 @@ func DisallowRedirects() option {
 	}
 }
 
+// Applies an Accept header to the request
+func Accept(accept string) option {
+	return func(opts *options) {
+		opts.accept = accept
+	}
+}
+
 func buildOptions(opts ...option) (*options, error) {
 	os := &options{
 		headers: nil,
@@ -186,6 +194,10 @@ func setHeaders(req *http.Request, opts *options) *http.Request {
 
 	if opts.formData != nil {
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	}
+
+	if opts.accept != "" {
+		req.Header.Set("Accept", opts.accept)
 	}
 
 	return req
