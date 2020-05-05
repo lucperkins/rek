@@ -25,6 +25,7 @@ type options struct {
 	bearer            string
 	disallowRedirects bool
 	accept            string
+	reqModifier       func(*http.Request)
 }
 
 func (o *options) validate() error {
@@ -149,10 +150,18 @@ func DisallowRedirects() option {
 	}
 }
 
-// Applies an Accept header to the request
+// Applies an Accept header to the request.
 func Accept(accept string) option {
 	return func(opts *options) {
 		opts.accept = accept
+	}
+}
+
+// Applies a user-provided request modification function. Applied after all other request modifications have been
+// made by the selected options.
+func RequestModifier(modifier func(*http.Request)) option {
+	return func(opts *options) {
+		opts.reqModifier = modifier
 	}
 }
 

@@ -70,5 +70,9 @@ func makeRequest(method, endpoint string, opts *options) (*http.Request, error) 
 
 	setCookies(req, opts)
 
+	if opts.reqModifier != nil {
+		opts.reqModifier(req)
+	}
+
 	return req, nil
 }
