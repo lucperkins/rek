@@ -1,5 +1,7 @@
 # rek
 
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=gostyle=flat)](https://pkg.go.dev/mod/github.com/lucperkins/rek)
+
 An easy HTTP client for [Go](https://golang.org), inspired by [Requests](https://requests.readthedocs.io/en/master/). Here's an example:
 
 ```go
