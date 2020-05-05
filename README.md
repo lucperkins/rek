@@ -43,7 +43,7 @@ Method | Description | Return type
 
 ## Options
 
-### Headersshie
+### Headers
 
 ```go
 headers := map[string]string{
