@@ -2,27 +2,33 @@ package rek
 
 import "net/http"
 
-func Get(url string, opts ...Option) (*Response, error) {
+// GET request
+func Get(url string, opts ...option) (*Response, error) {
 	return call(http.MethodGet, url, opts...)
 }
 
-func Post(url string, opts ...Option) (*Response, error) {
+// POST request
+func Post(url string, opts ...option) (*Response, error) {
 	return call(http.MethodPost, url, opts...)
 }
 
-func Put(url string, opts ...Option) (*Response, error) {
+// PUT request
+func Put(url string, opts ...option) (*Response, error) {
 	return call(http.MethodPut, url, opts...)
 }
 
-func Delete(url string, opts ...Option) (*Response, error) {
+// DELETE request
+func Delete(url string, opts ...option) (*Response, error) {
 	return call(http.MethodDelete, url, opts...)
 }
 
-func Patch(url string, opts ...Option) (*Response, error) {
+// PATCH request
+func Patch(url string, opts ...option) (*Response, error) {
 	return call(http.MethodPatch, url, opts...)
 }
 
-func Head(url string, opts ...Option) (*Response, error) {
+// HEAD request
+func Head(url string, opts ...option) (*Response, error) {
 	options, err := buildOptions(opts...)
 
 	cl := makeClient(options)
@@ -35,7 +41,7 @@ func Head(url string, opts ...Option) (*Response, error) {
 	return makeResponse(res)
 }
 
-func call(method, url string, opts ...Option) (*Response, error) {
+func call(method, url string, opts ...option) (*Response, error) {
 	options, err := buildOptions(opts...)
 	if err != nil {
 		return nil, err
