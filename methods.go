@@ -1,6 +1,9 @@
 package rek
 
-import "net/http"
+import (
+	"net/http"
+	"net/url"
+)
 
 // GET request
 func Get(url string, opts ...option) (*Response, error) {
@@ -41,7 +44,12 @@ func Head(url string, opts ...option) (*Response, error) {
 	return makeResponse(res)
 }
 
-func call(method, url string, opts ...option) (*Response, error) {
+func call(method, endpoint string, opts ...option) (*Response, error) {
+	u, err := url.Parse(endpoint)
+	if err != nil {
+		return nil, err
+	}
+
 	options, err := buildOptions(opts...)
 	if err != nil {
 		return nil, err
@@ -49,7 +57,7 @@ func call(method, url string, opts ...option) (*Response, error) {
 
 	cl := makeClient(options)
 
-	req, err := makeRequest(method, url, options)
+	req, err := makeRequest(method, u.String(), options)
 
 	res, err := cl.Do(req)
 	if err != nil {
