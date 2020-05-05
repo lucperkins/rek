@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/gob"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -26,6 +27,7 @@ type options struct {
 	disallowRedirects bool
 	accept            string
 	reqModifier       func(*http.Request)
+	apiKey            string
 }
 
 func (o *options) validate() error {
@@ -165,6 +167,13 @@ func RequestModifier(modifier func(*http.Request)) option {
 	}
 }
 
+// Adds an API key to the request.
+func ApiKey(key string) option {
+	return func(opts *options) {
+		opts.apiKey = key
+	}
+}
+
 func buildOptions(opts ...option) (*options, error) {
 	os := &options{
 		headers: nil,
@@ -207,6 +216,10 @@ func setHeaders(req *http.Request, opts *options) *http.Request {
 
 	if opts.accept != "" {
 		req.Header.Set("Accept", opts.accept)
+	}
+
+	if opts.apiKey != "" {
+		req.Header.Set("Authorization", fmt.Sprintf("Basic %s", opts.apiKey))
 	}
 
 	return req
