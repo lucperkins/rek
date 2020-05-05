@@ -1,7 +1,5 @@
 # rek
 
-![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/lucperkins/rek)
-
 An easy HTTP client for [Go](https://golang.org), inspired by [Requests](https://requests.readthedocs.io/en/master/). Here's an example:
 
 ```go
@@ -28,17 +26,18 @@ fmt.Println(res.Text())
 
 The `Response` struct has the following methods:
 
-```go
-StatusCode()    int
-Content()       []byte // The raw content of the response body
-Headers()       map[string]string
-Encoding()      []string
-Text()          string // string version of the response body
-Raw()           *http.Response // The unmodified net/http HTTP response
-Cookies()       []*http.Cookie
-ContentLength() int64
-Status()        string
-```
+
+Method | Description | Return type
+:------|:------------|:-----------
+`StatusCode()` | HTTP status code, e.g. 200, 400 | `int`
+`Content()` | The raw response body content | `[]byte`
+`Headers()` | The response headers | `map[string]string`
+`Encoding()` | The content encoding of the response body, e.g. `gzip` | `[]string`
+`Text()` | The response body as a string | `string`
+`Raw()` | The unmodified [`*http.Response`](https://pkg.go.dev/net/http?tab=doc#Response) | [`*http.Response`](https://pkg.go.dev/net/http?tab=doc#Response)
+`Cookies()` | The cookies attached to the response | `[]*http.Cookie`
+`ContentLength()` | The length of the response | `int64`
+`Status()` | The status of the response, e.g. `200 OK` | `string`
 
 ## Options
 
