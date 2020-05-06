@@ -30,6 +30,7 @@ type options struct {
 	reqModifier       func(*http.Request)
 	apiKey            string
 	ctx               context.Context
+	client            *http.Client
 }
 
 func (o *options) validate() error {
@@ -180,6 +181,13 @@ func ApiKey(key string) option {
 func Context(ctx context.Context) option {
 	return func(opts *options) {
 		opts.ctx = ctx
+	}
+}
+
+// Provide your own http.Client struct to make the request.
+func Client(client *http.Client) option {
+	return func(opts *options) {
+		opts.client = client
 	}
 }
 
