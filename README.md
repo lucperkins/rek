@@ -36,6 +36,8 @@ Method | Description | Return type
 `Headers()` | The response headers | `map[string]string`
 `Encoding()` | The content encoding of the response body, e.g. `gzip` | `[]string`
 `Text()` | The response body as a string | `string`
+`ContentType()` | The value of the `Content-Type` header | `string`
+`Json(interface{})` | Marshals the response body into JSON | `error`
 `Raw()` | The unmodified [`*http.Response`](https://pkg.go.dev/net/http?tab=doc#Response) | [`*http.Response`](https://pkg.go.dev/net/http?tab=doc#Response)
 `Cookies()` | The cookies attached to the response | `[]*http.Cookie`
 `ContentLength()` | The length of the response | `int64`
