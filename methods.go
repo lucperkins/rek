@@ -44,6 +44,11 @@ func Head(url string, opts ...option) (*Response, error) {
 	return makeResponse(res)
 }
 
+// Make a request with an arbitrary HTTP method, i.e. not GET, POST, PUT, DELETE, etc.
+func Do(method, url string, opts ...option) (*Response, error) {
+	return call(method, url, opts...)
+}
+
 func call(method, endpoint string, opts ...option) (*Response, error) {
 	u, err := url.Parse(endpoint)
 	if err != nil {
