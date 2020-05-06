@@ -149,7 +149,7 @@ res, err := rek.Post("https://httpbin.org/post", rek.Bearer(token))
 
 ### Request modifier
 
-Supply a function that modified the request (after all other request modifications have been made):
+Supply a function that modifies the [`*http.Request`](https://pkg.go.dev/net/http?tab=doc#Request) (after all other supplied options have been applied to the request):
 
 ```go
 modifier := func(r *http.Request) {
