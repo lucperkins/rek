@@ -221,6 +221,27 @@ res, err := rek.Get("https://long-winded-api.io", rek.Context(ctx))
 cancel()
 ```
 
+## OAuth2
+
+You can add an OAuth2 configuration and token to your request:
+
+```go
+conf := &oauth2.Config{
+	ClientID:     "YOUR_CLIENT_ID",
+	ClientSecret: "YOUR_CLIENT_SECRET",
+	Scopes:       []string{"SCOPE1", "SCOPE2"},
+	Endpoint: oauth2.Endpoint{
+		AuthURL:  "https://provider.com/o/oauth2/auth",
+		TokenURL: "https://provider.com/o/oauth2/token",
+	},
+}
+
+tok, err := conf.Exchange(ctx, code)
+// handle error
+
+res, err := rek.Get("https://oauth2-protected-site.com", rek.OAuth2(conf, tok))
+```
+
 
 ## Validation
 
