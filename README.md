@@ -221,7 +221,7 @@ res, err := rek.Get("https://long-winded-api.io", rek.Context(ctx))
 cancel()
 ```
 
-## OAuth2
+### OAuth2
 
 You can add an OAuth2 configuration and token to your request:
 
