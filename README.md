@@ -61,10 +61,19 @@ There are two simple helper methods for working with the response body:
 
 Function | Return types
 :--------|:------------
-`BodyAsString()` | `(string, error)`
-`BodyAsBytes()` | `([]byte, error)`
+`BodyAsString(io.ReadCloser)` | `(string, error)`
+`BodyAsBytes(io.ReadCloser)` | `([]byte, error)`
 
-Bear in mind the caveat mentioned above, that the request body can only be read once, still holds.
+Bear in mind the caveat mentioned above, that the request body can only be read once, still holds. Here are some examples:
+
+```go
+res, _ := rek.Get("https://httpbin.org/get")
+
+s, err := rek.BodyAsString(res.Body()) // body is read here
+// handle error
+
+bs, err := rek.BodyAsBytes(res.Body()) // bs is nil, as the body has already been read
+```
 
 ## Options
 

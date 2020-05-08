@@ -3,7 +3,6 @@ package rek
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -59,13 +58,13 @@ func (r *Response) Body() io.ReadCloser {
 }
 
 // The response body as a byte slice. Bear in mind that the response body can only be read once.
-func (r *Response) BodyAsBytes() ([]byte, error) {
-	return bodyBytes(r.body)
+func BodyAsBytes(r io.ReadCloser) ([]byte, error) {
+	return bodyBytes(r)
 }
 
 // The response body as a string. Bear in mind that the response body can only be read once.
-func (r *Response) BodyAsString() (string, error) {
-	bs, err := bodyBytes(r.body)
+func BodyAsString(r io.ReadCloser) (string, error) {
+	bs, err := bodyBytes(r)
 	if err != nil {
 		return "", err
 	}
