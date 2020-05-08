@@ -1,7 +1,7 @@
 package rek
 
 import (
-	"encoding/json"
+	"bytes"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -48,14 +48,36 @@ func makeResponse(res *http.Response) (*Response, error) {
 	return resp, nil
 }
 
-// The status code of the response (200, 404, etc.)
+// The status code of the response (200, 404, etc.).
 func (r *Response) StatusCode() int {
 	return r.statusCode
 }
 
-// The response body as raw bytes.
+// The response body as a io.ReadCloser. Bear in mind that the response body can only be read once.
 func (r *Response) Body() io.ReadCloser {
 	return r.body
+}
+
+// The response body as a byte slice. Bear in mind that the response body can only be read once.
+func (r *Response) BodyAsBytes() ([]byte, error) {
+	return bodyBytes(r.body)
+}
+
+// The response body as a string. Bear in mind that the response body can only be read once.
+func (r *Response) BodyAsString() (string, error) {
+	bs, err := bodyBytes(r.body)
+	if err != nil {
+		return "", err
+	}
+	return string(bs), nil
+}
+
+func bodyBytes(r io.ReadCloser) ([]byte, error) {
+	buf := bytes.Buffer{}
+	if _, err := buf.ReadFrom(r); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
 }
 
 // The headers associated with the response.
@@ -68,25 +90,6 @@ func (r *Response) Encoding() []string {
 	return r.encoding
 }
 
-// The response body as a string.
-func BodyAsText(r io.ReadCloser) (string, error) {
-	bs, err := ioutil.ReadAll(r)
-	if err != nil {
-		return "", err
-	}
-
-	return string(bs), nil
-}
-
-// Marshal a JSON response body.
-func BodyAsJson(r io.ReadCloser, v interface{}) error {
-	bs, err := ioutil.ReadAll(r)
-	if err != nil {
-		return err
-	}
-
-	return json.Unmarshal(bs, v)
-}
 
 // The Content-Type header for the request (if any).
 func (r *Response) ContentType() string {
