@@ -33,6 +33,9 @@ func Patch(url string, opts ...option) (*Response, error) {
 // HEAD request
 func Head(url string, opts ...option) (*Response, error) {
 	options, err := buildOptions(opts...)
+	if err != nil {
+		return nil, err
+	}
 
 	cl := makeClient(options)
 
