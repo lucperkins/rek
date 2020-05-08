@@ -12,17 +12,9 @@ func makeClient(opts *options) *http.Client {
 		cl = opts.client
 	} else {
 		if opts.oauth2Cfg != nil {
-			var ctx context.Context
-
 			cfg, tok := opts.oauth2Cfg.config, opts.oauth2Cfg.token
 
-			if opts.ctx == nil {
-				ctx = context.Background()
-			} else {
-				ctx = opts.ctx
-			}
-
-			cl = cfg.Client(ctx, tok)
+			cl = cfg.Client(getCtx(opts), tok)
 		} else {
 			c := &http.Client{}
 
@@ -45,4 +37,12 @@ func makeClient(opts *options) *http.Client {
 	}
 
 	return cl
+}
+
+func getCtx(opts *options) context.Context {
+	if opts.ctx == nil {
+		return context.Background()
+	} else {
+		return opts.ctx
+	}
 }
