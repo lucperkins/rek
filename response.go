@@ -89,7 +89,6 @@ func (r *Response) Encoding() []string {
 	return r.encoding
 }
 
-
 // The Content-Type header for the request (if any).
 func (r *Response) ContentType() string {
 	return r.Headers()["Content-Type"]
