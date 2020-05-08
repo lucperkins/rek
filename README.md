@@ -32,16 +32,39 @@ The `Response` struct has the following methods:
 Method | Description | Return type
 :------|:------------|:-----------
 `StatusCode()` | HTTP status code, e.g. 200, 400 | `int`
-`Content()` | The raw response body content | `[]byte`
+`Body()` | The HTTP response body as a reader | [`io.CloserReader`](https://pkg.go.dev/io?tab=doc#ReadCloser)
 `Headers()` | The response headers | `map[string]string`
 `Encoding()` | The content encoding of the response body, e.g. `gzip` | `[]string`
-`Text()` | The response body as a string | `string`
 `ContentType()` | The value of the `Content-Type` header | `string`
-`Json(interface{})` | Marshals the response body into JSON | `error`
 `Raw()` | The unmodified [`*http.Response`](https://pkg.go.dev/net/http?tab=doc#Response) | [`*http.Response`](https://pkg.go.dev/net/http?tab=doc#Response)
 `Cookies()` | The cookies attached to the response | `[]*http.Cookie`
 `ContentLength()` | The length of the response | `int64`
 `Status()` | The status of the response, e.g. `200 OK` | `string`
+
+### HTTP response body
+
+Keep in mind that the HTTP response body **can only be read once**. This is one area in which rek does *not* directly correspond to the [Requests](https://requests.readthedocs.io/en/master/) API. And so this, for example, won't work the way you might want:
+
+```go
+res, _ := rek.Get("https://httpbin.org/get")
+
+bs1, _ := ioutil.ReadAll(res.Body()) // Non-empty byte slice
+
+bs2, _ := ioutil.ReadAll(res.Body()) // Empty byte slice
+```
+
+If you'd like to use the response body more than once, store it in a variable rather than re-accessing the body.
+
+### Helper methods
+
+There are two simple helper methods for working with the response body:
+
+Function | Return types
+:--------|:------------
+`BodyAsString()` | `(string, error)`
+`BodyAsBytes()` | `([]byte, error)`
+
+Bear in mind the caveat mentioned above, that the request body can only be read once, still holds.
 
 ## Options
 

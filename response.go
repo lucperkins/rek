@@ -1,7 +1,8 @@
 package rek
 
 import (
-	"encoding/json"
+	"bytes"
+	"io"
 	"io/ioutil"
 	"net/http"
 )
@@ -9,11 +10,11 @@ import (
 // A struct containing the relevant response information returned by a rek request.
 type Response struct {
 	statusCode int
-	content    []byte
 	headers    map[string]string
 	encoding   []string
 	cookies    []*http.Cookie
 	res        *http.Response
+	body       io.ReadCloser
 }
 
 func makeResponse(res *http.Response) (*Response, error) {
@@ -33,14 +34,7 @@ func makeResponse(res *http.Response) (*Response, error) {
 	}
 
 	if res.Body != nil {
-		defer res.Body.Close()
-
-		bs, err := ioutil.ReadAll(res.Body)
-		if err != nil {
-			return nil, err
-		}
-
-		resp.content = bs
+		resp.body = res.Body
 	}
 
 	if res.TransferEncoding != nil {
@@ -54,14 +48,36 @@ func makeResponse(res *http.Response) (*Response, error) {
 	return resp, nil
 }
 
-// The status code of the response (200, 404, etc.)
+// The status code of the response (200, 404, etc.).
 func (r *Response) StatusCode() int {
 	return r.statusCode
 }
 
-// The response body as raw bytes.
-func (r *Response) Content() []byte {
-	return r.content
+// The response body as a io.ReadCloser. Bear in mind that the response body can only be read once.
+func (r *Response) Body() io.ReadCloser {
+	return r.body
+}
+
+// The response body as a byte slice. Bear in mind that the response body can only be read once.
+func (r *Response) BodyAsBytes() ([]byte, error) {
+	return bodyBytes(r.body)
+}
+
+// The response body as a string. Bear in mind that the response body can only be read once.
+func (r *Response) BodyAsString() (string, error) {
+	bs, err := bodyBytes(r.body)
+	if err != nil {
+		return "", err
+	}
+	return string(bs), nil
+}
+
+func bodyBytes(r io.ReadCloser) ([]byte, error) {
+	buf := bytes.Buffer{}
+	if _, err := buf.ReadFrom(r); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
 }
 
 // The headers associated with the response.
@@ -74,15 +90,6 @@ func (r *Response) Encoding() []string {
 	return r.encoding
 }
 
-// The response body as a string.
-func (r *Response) Text() string {
-	return string(r.content)
-}
-
-// Marshal a JSON response body.
-func (r *Response) Json(v interface{}) error {
-	return json.Unmarshal(r.content, v)
-}
 
 // The Content-Type header for the request (if any).
 func (r *Response) ContentType() string {
