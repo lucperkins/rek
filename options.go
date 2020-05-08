@@ -6,6 +6,7 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
+	"golang.org/x/oauth2"
 	"io"
 	"net/http"
 	"time"
@@ -31,6 +32,12 @@ type options struct {
 	apiKey            string
 	ctx               context.Context
 	client            *http.Client
+	oauth2Cfg         *oauth2Config
+}
+
+type oauth2Config struct {
+	config *oauth2.Config
+	token  *oauth2.Token
 }
 
 func (o *options) validate() error {
@@ -191,11 +198,18 @@ func Client(client *http.Client) option {
 	}
 }
 
-func buildOptions(opts ...option) (*options, error) {
-	os := &options{
-		headers: nil,
-		timeout: 10 * time.Second,
+// Apply an OAuth2 configuration and token to the request.
+func OAuth2(cfg *oauth2.Config, tok *oauth2.Token) option {
+	return func(opts *options) {
+		opts.oauth2Cfg = &oauth2Config{
+			config: cfg,
+			token:  tok,
+		}
 	}
+}
+
+func buildOptions(opts ...option) (*options, error) {
+	os := &options{}
 
 	for _, opt := range opts {
 		opt(os)
