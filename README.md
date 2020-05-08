@@ -32,7 +32,7 @@ The `Response` struct has the following methods:
 Method | Description | Return type
 :------|:------------|:-----------
 `StatusCode()` | HTTP status code, e.g. 200, 400 | `int`
-`Body()` | The HTTP response body as a reader | [`io.CloserReader`](https://pkg.go.dev/io?tab=doc#ReadCloser)
+`Body()` | The HTTP response body as a reader | [`io.ReadCloser`](https://pkg.go.dev/io?tab=doc#ReadCloser)
 `Headers()` | The response headers | `map[string]string`
 `Encoding()` | The content encoding of the response body, e.g. `gzip` | `[]string`
 `ContentType()` | The value of the `Content-Type` header | `string`
