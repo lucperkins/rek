@@ -242,6 +242,18 @@ tok, err := conf.Exchange(ctx, code)
 res, err := rek.Get("https://oauth2-protected-site.com", rek.OAuth2(conf, tok))
 ```
 
+## Custom client
+
+You can pass in your own `*http.Client` as the basis for the request:
+
+```go
+client := &http.Client{
+    // Custom attributes
+}
+
+res, err := rek.Get("https://httpbin.org/get", rek.Client(client))
+```
+
 
 ## Validation
 
