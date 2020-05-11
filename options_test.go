@@ -3,31 +3,35 @@ package rek
 import (
 	"context"
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	"golang.org/x/oauth2"
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"golang.org/x/oauth2"
 )
 
 var (
-	headers = map[string]string{"Foo": "bar"}
-	timeout = 11 * time.Hour
+	headers  = map[string]string{"Foo": "bar"}
+	timeout  = 11 * time.Hour
 	username = "user"
 	password = "pass"
-	data = struct { Name string; Age int }{ "Methuselah", 965 }
-	userAgent = "Feldman"
-	callback = func(res *Response) { fmt.Println(res.StatusCode()) }
-	cookies = []*http.Cookie{{Path: "/foo"}}
-	f = &file{FieldName: "file", Filepath: "go.mod", Params: nil}
-	form = map[string]string{"foo": "bar", "baq": "baz"}
-	bearer = "a1b2c3d4"
+	data     = struct {
+		Name string
+		Age  int
+	}{"Methuselah", 965}
+	userAgent   = "Feldman"
+	callback    = func(res *Response) { fmt.Println(res.StatusCode()) }
+	cookies     = []*http.Cookie{{Path: "/foo"}}
+	f           = &file{FieldName: "file", Filepath: "go.mod", Params: nil}
+	form        = map[string]string{"foo": "bar", "baq": "baz"}
+	bearer      = "a1b2c3d4"
 	reqModifier = func(req *http.Request) { fmt.Println(req.URL.String()) }
-	apiKey = bearer
-	ctx = context.WithValue(context.Background(), "value", "some-val")
-	cl = &http.Client{}
-	oauthCfg = &oauth2.Config{Scopes: []string{"admin", "superuser"}}
-	oauthTok = &oauth2.Token{AccessToken:"a1b2c3d4"}
+	apiKey      = bearer
+	ctx         = context.WithValue(context.Background(), "value", "some-val")
+	cl          = &http.Client{}
+	oauthCfg    = &oauth2.Config{Scopes: []string{"admin", "superuser"}}
+	oauthTok    = &oauth2.Token{AccessToken: "a1b2c3d4"}
 )
 
 func TestOptionsBuilder(t *testing.T) {
