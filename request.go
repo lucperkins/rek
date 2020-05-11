@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func makeRequest(method, endpoint string, opts *options) (*http.Request, error) {
+func buildRequest(method, endpoint string, opts *options) (*http.Request, error) {
 	var body io.Reader
 	var contentType string
 	var req *http.Request

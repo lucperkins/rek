@@ -16,7 +16,7 @@ type Response struct {
 	body       io.ReadCloser
 }
 
-func makeResponse(res *http.Response) (*Response, error) {
+func buildResponse(res *http.Response) (*Response, error) {
 	resp := &Response{
 		statusCode: res.StatusCode,
 		res:        res,

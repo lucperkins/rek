@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func makeClient(opts *options) *http.Client {
+func buildClient(opts *options) *http.Client {
 	var cl *http.Client
 
 	if opts.client != nil {
