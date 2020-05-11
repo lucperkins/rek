@@ -6,10 +6,11 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
-	"golang.org/x/oauth2"
 	"io"
 	"net/http"
 	"time"
+
+	"golang.org/x/oauth2"
 )
 
 type options struct {
@@ -63,24 +64,24 @@ func (o *options) validate() error {
 	return nil
 }
 
-type option func(*options)
+type Option func(*options)
 
 // Add headers to the request.
-func Headers(headers map[string]string) option {
+func Headers(headers map[string]string) Option {
 	return func(opts *options) {
 		opts.headers = headers
 	}
 }
 
 // Add a timeout to the request.
-func Timeout(timeout time.Duration) option {
+func Timeout(timeout time.Duration) Option {
 	return func(opts *options) {
 		opts.timeout = timeout
 	}
 }
 
 // Add a basic auth username and password to the request.
-func BasicAuth(username, password string) option {
+func BasicAuth(username, password string) Option {
 	return func(opts *options) {
 		opts.username = username
 		opts.password = password
@@ -88,14 +89,14 @@ func BasicAuth(username, password string) option {
 }
 
 // Add any interface{} that can be serialized to a []byte and apply a "Content-Type: application/octet-stream" header.
-func Data(data interface{}) option {
+func Data(data interface{}) Option {
 	return func(opts *options) {
 		opts.data = data
 	}
 }
 
 // Add a User-Agent header to the request.
-func UserAgent(agent string) option {
+func UserAgent(agent string) Option {
 	return func(opts *options) {
 		opts.userAgent = agent
 	}
@@ -103,35 +104,35 @@ func UserAgent(agent string) option {
 
 // Add any interface{} that can be marshaled as JSON to the request body and apply a "Content-Type:
 // application/json;charset=utf-8" header.
-func Json(v interface{}) option {
+func Json(v interface{}) Option {
 	return func(opts *options) {
 		opts.jsonObj = v
 	}
 }
 
 // Add a callback function for handling the Response.
-func Callback(cb func(*Response)) option {
+func Callback(cb func(*Response)) Option {
 	return func(opts *options) {
 		opts.callback = cb
 	}
 }
 
 // Add cookies to the request.
-func Cookies(cookies []*http.Cookie) option {
+func Cookies(cookies []*http.Cookie) Option {
 	return func(opts *options) {
 		opts.cookies = cookies
 	}
 }
 
 // Add a cookie jar to the request.
-func CookieJar(jar http.CookieJar) option {
+func CookieJar(jar http.CookieJar) Option {
 	return func(opts *options) {
 		opts.cookieJar = &jar
 	}
 }
 
 // Create a multipart file upload request.
-func File(fieldName, filepath string, params map[string]string) option {
+func File(fieldName, filepath string, params map[string]string) Option {
 	return func(opts *options) {
 		opts.file = &file{
 			FieldName: fieldName,
@@ -142,28 +143,28 @@ func File(fieldName, filepath string, params map[string]string) option {
 }
 
 // Add key/value form data to the request body and apply a "Content-Type: application/x-www-form-urlencoded" header.
-func FormData(form map[string]string) option {
+func FormData(form map[string]string) Option {
 	return func(opts *options) {
 		opts.formData = form
 	}
 }
 
 // Add a bearer header of the form "Authorization: Bearer ..."
-func Bearer(bearer string) option {
+func Bearer(bearer string) Option {
 	return func(opts *options) {
 		opts.bearer = bearer
 	}
 }
 
 // Turn redirects off.
-func DisallowRedirects() option {
+func DisallowRedirects() Option {
 	return func(opts *options) {
 		opts.disallowRedirects = true
 	}
 }
 
 // Applies an Accept header to the request.
-func Accept(accept string) option {
+func Accept(accept string) Option {
 	return func(opts *options) {
 		opts.accept = accept
 	}
@@ -171,35 +172,35 @@ func Accept(accept string) option {
 
 // Applies a user-provided request modification function. Applied after all other request modifications have been
 // made by the selected options.
-func RequestModifier(modifier func(*http.Request)) option {
+func RequestModifier(modifier func(*http.Request)) Option {
 	return func(opts *options) {
 		opts.reqModifier = modifier
 	}
 }
 
 // Adds an API key to the request.
-func ApiKey(key string) option {
+func ApiKey(key string) Option {
 	return func(opts *options) {
 		opts.apiKey = key
 	}
 }
 
 // Pass a context into the HTTP request (allows for request cancellation, for example).
-func Context(ctx context.Context) option {
+func Context(ctx context.Context) Option {
 	return func(opts *options) {
 		opts.ctx = ctx
 	}
 }
 
 // Provide your own http.Client struct to make the request.
-func Client(client *http.Client) option {
+func Client(client *http.Client) Option {
 	return func(opts *options) {
 		opts.client = client
 	}
 }
 
 // Apply an OAuth2 configuration and token to the request.
-func OAuth2(cfg *oauth2.Config, tok *oauth2.Token) option {
+func OAuth2(cfg *oauth2.Config, tok *oauth2.Token) Option {
 	return func(opts *options) {
 		opts.oauth2Cfg = &oauth2Config{
 			config: cfg,
@@ -208,7 +209,7 @@ func OAuth2(cfg *oauth2.Config, tok *oauth2.Token) option {
 	}
 }
 
-func buildOptions(opts ...option) (*options, error) {
+func buildOptions(opts ...Option) (*options, error) {
 	os := &options{}
 
 	for _, opt := range opts {

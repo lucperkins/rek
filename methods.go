@@ -6,32 +6,32 @@ import (
 )
 
 // GET request
-func Get(url string, opts ...option) (*Response, error) {
+func Get(url string, opts ...Option) (*Response, error) {
 	return call(http.MethodGet, url, opts...)
 }
 
 // POST request
-func Post(url string, opts ...option) (*Response, error) {
+func Post(url string, opts ...Option) (*Response, error) {
 	return call(http.MethodPost, url, opts...)
 }
 
 // PUT request
-func Put(url string, opts ...option) (*Response, error) {
+func Put(url string, opts ...Option) (*Response, error) {
 	return call(http.MethodPut, url, opts...)
 }
 
 // DELETE request
-func Delete(url string, opts ...option) (*Response, error) {
+func Delete(url string, opts ...Option) (*Response, error) {
 	return call(http.MethodDelete, url, opts...)
 }
 
 // PATCH request
-func Patch(url string, opts ...option) (*Response, error) {
+func Patch(url string, opts ...Option) (*Response, error) {
 	return call(http.MethodPatch, url, opts...)
 }
 
 // HEAD request
-func Head(url string, opts ...option) (*Response, error) {
+func Head(url string, opts ...Option) (*Response, error) {
 	options, err := buildOptions(opts...)
 	if err != nil {
 		return nil, err
@@ -48,11 +48,11 @@ func Head(url string, opts ...option) (*Response, error) {
 }
 
 // Make a request with an arbitrary HTTP method, i.e. not GET, POST, PUT, DELETE, etc.
-func Do(method, url string, opts ...option) (*Response, error) {
+func Do(method, url string, opts ...Option) (*Response, error) {
 	return call(method, url, opts...)
 }
 
-func call(method, endpoint string, opts ...option) (*Response, error) {
+func call(method, endpoint string, opts ...Option) (*Response, error) {
 	u, err := url.Parse(endpoint)
 	if err != nil {
 		return nil, err
