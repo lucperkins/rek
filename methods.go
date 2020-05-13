@@ -66,6 +66,9 @@ func do(method, endpoint string, opts ...Option) (*Response, error) {
 	cl := buildClient(options)
 
 	req, err := buildRequest(method, u.String(), options)
+	if err != nil {
+		return nil, err
+	}
 
 	res, err := cl.Do(req)
 	if err != nil {
