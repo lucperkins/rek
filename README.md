@@ -266,5 +266,5 @@ _, err := rek.Post("https://httpbin.org/post",
     rek.Json(comment),
     rek.FormData(map[string]string{"foo": "bar"}))
 
-fmt.Println(err == rek.ErrRequestBodySetMultipleTimes) // true
+fmt.Println(errors.Is(err, rek.ErrRequestBodySetMultipleTimes)) // true
 ```
