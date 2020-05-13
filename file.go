@@ -30,17 +30,19 @@ func buildMultipartBody(opts *options) (io.Reader, string, error) {
 
 	f := opts.file.build()
 
-	data, err := os.Open(f.Filepath)
+	file, err := os.Open(f.Filepath)
 	if err != nil {
 		return nil, "", err
 	}
+
+	defer file.Close()
 
 	part, err := writer.CreateFormFile(f.FieldName, filepath.Base(f.Filepath))
 	if err != nil {
 		return nil, "", err
 	}
 
-	if _, err := io.Copy(part, data); err != nil {
+	if _, err := io.Copy(part, file); err != nil {
 		return nil, "", err
 	}
 
