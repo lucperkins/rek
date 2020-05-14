@@ -5,23 +5,32 @@
 An easy HTTP client for [Go](https://golang.org) inspired by [Requests](https://requests.readthedocs.io/en/master/), plus all the Go-specific goodies you'd hope for in a client. Here's an example:
 
 ```go
+// GET request
+res, _ := rek.Get("https://httpbin.org/get")
+
+fmt.Println(res.StatusCode())
+
+body, _ := rek.BodyAsString(res.Body())
+
+fmt.Println(body)
+
+// POST request
 type Comment struct {
-    Body string `json:"body"`
+    Username string `json:"username"`
+    Body     string `json:"body"`
 }
 
-comment := Comment{Body: "This movie sucked"}
-
-headers := map[string]string{"My-Custom-Header", "foo,bar,baz"}
-
-res, err := rek.Post("https://httpbin.org/post",
-    rek.Json(comment),
-    rek.Headers(headers),
+res, _ := rek.Post("https://httpbin.org/post",
+    rek.Json(Comment{Username: "genesiskel", Body: "This movie sucked. Two thumbs down."}),
+    rek.Headers(map[string]string{"My-Custom-Header", "foo,bar,baz"}),
     rek.BasicAuth("user", "pass"),
     rek.Timeout(5 * time.Second),
 )
 
 fmt.Println(res.StatusCode())
-fmt.Println(res.Text())
+
+body, _ := rek.BodyAsString(res.Body())
+fmt.Println(body)
 ```
 
 ## Responses
@@ -69,10 +78,9 @@ Bear in mind the caveat mentioned above, that the request body can only be read 
 ```go
 res, _ := rek.Get("https://httpbin.org/get")
 
-s, err := rek.BodyAsString(res.Body()) // body is read here
-// handle error
+s1, _ := rek.BodyAsString(res.Body()) // body is read here
 
-bs, err := rek.BodyAsBytes(res.Body()) // bs is nil, as the body has already been read
+s2, _ := rek.BodyAsString(res.Body()) // s2 is an empty empty string
 ```
 
 ## Options
