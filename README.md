@@ -80,7 +80,7 @@ res, _ := rek.Get("https://httpbin.org/get")
 
 s1, _ := rek.BodyAsString(res.Body()) // body is read here
 
-s2, _ := rek.BodyAsString(res.Body()) // s2 is an empty empty string
+s2, _ := rek.BodyAsString(res.Body()) // s2 is an empty string
 ```
 
 ## Options
