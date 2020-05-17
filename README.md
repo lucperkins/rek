@@ -130,6 +130,8 @@ form := map[string]string{
 res, err := rek.Put("https://httpbin.org/put", rek.FormData(form))
 ```
 
+> Request headers are automatically updated to include `Content-Type` as `application/x-www-form-urlencoded`.
+
 ### File upload
 
 ```go
