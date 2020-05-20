@@ -22,7 +22,7 @@ type Comment struct {
 
 res, _ := rek.Post("https://httpbin.org/post",
     rek.Json(Comment{Username: "genesiskel", Body: "This movie sucked. Two thumbs down."}),
-    rek.Headers(map[string]string{"My-Custom-Header", "foo,bar,baz"}),
+    rek.Headers(map[string]string{"My-Custom-Header": "foo,bar,baz"}),
     rek.BasicAuth("user", "pass"),
     rek.Timeout(5 * time.Second),
 )
