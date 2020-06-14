@@ -83,6 +83,14 @@ s1, _ := rek.BodyAsString(res.Body()) // body is read here
 s2, _ := rek.BodyAsString(res.Body()) // s2 is an empty string
 ```
 
+### Non-standard methods
+
+rek natively supports the methods `GET`, `POST`, `PUT`, `DELETE`, `PATCH`, and `HEAD`. If you'd like to use a method that's not directly supported, you can use the [`Do`](https://pkg.go.dev/github.com/lucperkins/rek?tab=doc#Do/) function:
+
+```go
+res, err := rek.Do("SOMEOTHERMETHOD", rek.Timeout(10 * time.Second))
+```
+
 ## Options
 
 ### Headers
