@@ -2,10 +2,11 @@ package rek
 
 import (
 	"context"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestClientBuilder(t *testing.T) {
@@ -33,7 +34,7 @@ func TestClientBuilder(t *testing.T) {
 	opts = &options{}
 	opts.oauth2Cfg = &oauth2Config{
 		config: oauthCfg,
-		token: oauthTok,
+		token:  oauthTok,
 	}
 	cl = buildClient(opts)
 	is.Equal(cl, oauthCfg.Client(context.Background(), oauthTok))
