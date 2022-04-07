@@ -76,6 +76,9 @@ func bodyBytes(r io.ReadCloser) ([]byte, error) {
 	if _, err := buf.ReadFrom(r); err != nil {
 		return nil, err
 	}
+	if err := r.Close(); err != nil {
+		return nil, err
+	}
 	return buf.Bytes(), nil
 }
 
