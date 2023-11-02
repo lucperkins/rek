@@ -1,5 +1,10 @@
-name: Build and test
-on: [push, pull_request]
+name: rek build and test
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
 jobs:
   build_and_test:
     runs-on: ubuntu-22.04
