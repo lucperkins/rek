@@ -9,13 +9,13 @@ jobs:
   build_and_test:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - uses: DeterminateSystems/flake-checker-action@v5
         with:
           fail-mode: true
       - uses: DeterminateSystems/nix-installer-action@v6
       - uses: DeterminateSystems/magic-nix-cache-action@v2
-    - name: Build
-      run: nix develop --command go build -v ./...
-    - name: Test
-      run: nix develop --command go test -v -p 1 ./...
+      - name: Build
+        run: nix develop --command go build -v ./...
+      - name: Test
+        run: nix develop --command go test -v -p 1 ./...
