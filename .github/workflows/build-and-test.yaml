@@ -3,7 +3,7 @@ name: rek build and test
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [master]
 
 jobs:
   build_and_test:
