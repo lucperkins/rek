@@ -7,14 +7,14 @@ on:
 
 jobs:
   build_and_test:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/flake-checker-action@main
         with:
           fail-mode: true
-      - uses: DeterminateSystems/nix-installer-action@main
-      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - uses: DeterminateSystems/determinate-nix-action@main
+      - uses: DeterminateSystems/flakehub-cache-action@main
       - name: Build
         run: nix develop --command go build -v ./...
       - name: Test
